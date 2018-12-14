@@ -175,6 +175,11 @@ public class ImpExpExcel {
 		RegionUtil.setBorderRight(1, callRangeAddress, sheet,workBook);
 		RegionUtil.setBorderTop(1, callRangeAddress, sheet,workBook);
    }
+	/**
+	 * 合并单元格添加边框
+	 * @param wb
+	 * @return
+	 */
 	private HSSFCellStyle setCellStyle(HSSFWorkbook wb) {
 		HSSFCellStyle cellStyle = wb.createCellStyle();  
 		cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
