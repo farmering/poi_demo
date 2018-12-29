@@ -329,8 +329,8 @@ public class DateKit {
 	 * @return
 	 */
 	public static Integer getFirstDayOfThisMonth() {
-		Integer year = DateUtil.getIntYearNow();
-		Integer month = DateUtil.getIntMonthNow();
+		Integer year = DateKit.getIntYearNow();
+		Integer month = DateKit.getIntMonthNow();
 		return getIntDate(newCalendar(year, month, 1));
 	}
 
