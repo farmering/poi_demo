@@ -46,15 +46,7 @@
 	    <version>3.10-FINAL</version>
 	</dependency>
 
-	<!-- 添加项目中的jar包 -->
-	<dependency>
-	    <groupId>com.heavenlake.wordapi.Document</groupId>
-	    <artifactId>java2word</artifactId>
-	    <version>1.0</version>
-	    <scope>system</scope>
-	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/Java2Word.jar</systemPath>
-	</dependency>
-    
+	
     <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
 	<dependency>
 	    <groupId>com.alibaba</groupId>
@@ -75,6 +67,60 @@
 	</dependency>
     
     
+    
+    
+    <!-- 添加项目中的jar包 -->
+	<dependency>
+	    <groupId>com.heavenlake.wordapi.Document</groupId>
+	    <artifactId>java2word</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/Java2Word.jar</systemPath>
+	</dependency>
+    <dependency>
+	    <groupId>org.org.icepdf</groupId>
+	    <artifactId>icepdf-core</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/icepdf-core.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>org.org.icepdf</groupId>
+	    <artifactId>icepdf-extra</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/icepdf-extra.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>org.org.icepdf</groupId>
+	    <artifactId>icepdf-pro-intl</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/icepdf-pro-intl.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>org.org.icepdf</groupId>
+	    <artifactId>icepdf-pro</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/icepdf-pro.jar</systemPath>
+	</dependency>
+	 <dependency>
+	    <groupId>org.org.icepdf</groupId>
+	    <artifactId>icepdf-viewer</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/icepdf-viewer.jar</systemPath>
+	</dependency>
+	
+	
+	 <dependency>
+	    <groupId>org.org.aspose-words</groupId>
+	    <artifactId>aspose-words-15.8.0-jdk16</artifactId>
+	    <version>1.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/src/main/webapp/WEB-INF/libs/aspose-words-15.8.0-jdk16.jar</systemPath>
+	</dependency>
   </dependencies>
   <build>
     <finalName>poi_demo</finalName>
