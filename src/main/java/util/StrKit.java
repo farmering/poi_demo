@@ -1,8 +1,13 @@
 package util;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -324,5 +329,200 @@ public class StrKit {
 				throw new Error("miscalculated data length!");
 			return out;
 		}
+	}
+	/**
+	 * 将下划线方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：hello_world->HelloWorld
+	 * @param name  转换前的下划线大写方式命名的字符串
+	 * @return 转换后的驼峰式命名的字符串
+	 */
+	public static String toCamelCase(String name) {
+		if (name == null) {
+			return null;
+		}
+		if (name.contains(UNDERLINE)) {
+			name = name.toLowerCase();
+			StringBuilder sb = new StringBuilder(name.length());
+			boolean upperCase = false;
+			for (int i = 0; i < name.length(); i++) {
+				char c = name.charAt(i);
+				if (c == '_') {
+					upperCase = true;
+				} else if (upperCase) {
+					sb.append(Character.toUpperCase(c));
+					upperCase = false;
+				} else {
+					sb.append(c);
+				}
+			}
+			return sb.toString();
+		} else
+			return name;
+	}
+	/**
+	 * 将驼峰式命名的字符串转换为下划线方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。</br>
+	 * 例如：HelloWorld->hello_world
+	 * @param camelCaseStr 转换前的驼峰式命名的字符串
+	 * @return 转换后下划线大写方式命名的字符串
+	 */
+	public static String toUnderlineCase(String camelCaseStr) {
+		if (camelCaseStr == null) {
+			return null;
+		}
+		final int length = camelCaseStr.length();
+		StringBuilder sb = new StringBuilder();
+		char c;
+		boolean isPreUpperCase = false;
+		for (int i = 0; i < length; i++) {
+			c = camelCaseStr.charAt(i);
+			boolean isNextUpperCase = true;
+			if (i < (length - 1)) {
+				isNextUpperCase = Character.isUpperCase(camelCaseStr.charAt(i + 1));
+			}
+			if (Character.isUpperCase(c)) {
+				if (!isPreUpperCase || !isNextUpperCase) {
+					if (i > 0)
+						sb.append(UNDERLINE);
+				}
+				isPreUpperCase = true;
+			} else {
+				isPreUpperCase = false;
+			}
+			sb.append(Character.toLowerCase(c));
+		}
+		return sb.toString();
+	}
+	/**
+	 * 将byte数组转为字符串
+	 * @param bytes byte数组
+	 * @param charset 字符集
+	 * @return 字符串
+	 */
+	public static String str(byte[] bytes, String charset) {
+		return new String(bytes, Charset.forName(charset));
+	}
+	/**
+	 * 编码字符串
+	 * @param str 字符串
+	 * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+	 * @return 编码后的字节码
+	 */
+	public static byte[] encode(String str, String charset) {
+		if (str == null) {
+			return null;
+		}
+		if (isBlank(charset)) {
+			return str.getBytes();
+		}
+		try {
+			return str.getBytes(charset);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(format("Charset [{}] unsupported!", charset));
+		}
+	}
+
+	/**
+	 * 解码字节码
+	 * @param data   字符串
+	 * @param charset  字符集，如果此字段为空，则解码的结果取决于平台
+	 * @return 解码后的字符串
+	 */
+	public static String decode(byte[] data, String charset) {
+		if (data == null) {
+			return null;
+		}
+		if (isBlank(charset)) {
+			return new String(data);
+		}
+		try {
+			return new String(data, charset);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(format("Charset [{}] unsupported!", charset));
+		}
+	}
+
+	/**
+	 * 格式化文本
+	 * @param template  文本模板，被替换的部分用 {key} 表示
+	 * @param map  参数值对
+	 * @return 格式化后的文本
+	 */
+	public static String format(String template, Map<?, ?> map) {
+		if (null == map || map.isEmpty()) {
+			return template;
+		}
+		for (Entry<?, ?> entry : map.entrySet()) {
+			template = template.replace("{" + entry.getKey() + "}", entry.getValue().toString());
+		}
+		return template;
+	}
+	/**
+	 * 格式化文本
+	 * @param template 文本模板，被替换的部分用 {} 表示
+	 * @param values 参数值
+	 * @return 格式化后的文本
+	 */
+	public static String format(String template, Object... values) {
+		if (values==null||values.length==0 || isBlank(template)) {
+			return template;
+		}
+		final StringBuilder sb = new StringBuilder();
+		final int length = template.length();
+		int valueIndex = 0;
+		char currentChar;
+		for (int i = 0; i < length; i++) {
+			if (valueIndex >= values.length) {
+				sb.append(sub(template, i, length));
+				break;
+			}
+			currentChar = template.charAt(i);
+			if (currentChar == '{') {
+				final char nextChar = template.charAt(++i);
+				if (nextChar == '}') {
+					sb.append(values[valueIndex++]);
+				} else {
+					sb.append('{').append(nextChar);
+				}
+			} else {
+				sb.append(currentChar);
+			}
+
+		}
+		return sb.toString();
+	}
+	/**
+	 * index从0开始计算，最后一个字符为-1<br>
+	 * 如果from和to位置一样，返回 "" example: abcdefgh 2 3 -> c abcdefgh 2 -3 -> cde
+	 * 
+	 * @param string   String
+	 * @param fromIndex 开始的index（包括）
+	 * @param toIndex 结束的index（不包括）
+	 * @return 字串
+	 */
+	public static String sub(String string, int fromIndex, int toIndex) {
+		int len = string.length();
+
+		if (fromIndex < 0) {
+			fromIndex = len + fromIndex;
+
+			if (toIndex == 0) {
+				toIndex = len;
+			}
+		}
+		if (toIndex < 0) {
+			toIndex = len + toIndex;
+		}
+		if (toIndex < fromIndex) {
+			int tmp = fromIndex;
+			fromIndex = toIndex;
+			toIndex = tmp;
+		}
+		if (fromIndex == toIndex) {
+			return EMPTY;
+		}
+
+		char[] strArray = string.toCharArray();
+		char[] newStrArray = Arrays.copyOfRange(strArray, fromIndex, toIndex);
+		return new String(newStrArray);
 	}
 }
