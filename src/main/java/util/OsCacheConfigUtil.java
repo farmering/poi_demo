@@ -6,6 +6,8 @@ import java.util.List;
 import com.opensymphony.oscache.base.NeedsRefreshException;
 import com.opensymphony.oscache.general.GeneralCacheAdministrator;
 
+import sun.SpringKit;
+
 /**
  * 工具类 - 缓存
  * 
