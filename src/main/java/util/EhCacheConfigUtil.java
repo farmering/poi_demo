@@ -1,5 +1,6 @@
 package util;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,9 @@ public class EhCacheConfigUtil {
 	
 	public static void main(String[] args) {
 		//创建一个缓存管理器
-        CacheManager singletonManager = CacheManager.create();
+		URL path =EhCacheConfigUtil.class.getClassLoader().getResource("ehcache.xml");
+		CacheManager singletonManager = CacheManager.newInstance(path.getPath());
+//        CacheManager singletonManager = CacheManager.create();
         //建立一个缓存实例
         Cache memoryOnlyCache = new Cache("testCache", 5000, false, false, 5, 2);
         //在内存管理器中添加缓存实例
