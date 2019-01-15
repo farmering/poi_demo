@@ -1,7 +1,11 @@
 package util;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -253,6 +259,32 @@ public class ExcelExportKit<T> {
 		return cell;
 	}
 	public static void main(String[] args) {
-		
+		OutputStream os=null;
+		String[] columns = new String[] {"COURSENAME","PRICE","PERIOD","UPLOADDATE","NUM"};// 汉字表头
+		String[] headers = new String[] {"课程名称","价格","学时","上传时间","销量"};// 数据库字段
+		ExcelExportKit <ExcelExportKit> excelExportKit=new  ExcelExportKit<ExcelExportKit>();
+		List<Map<String, Object>> dataset=new ArrayList<Map<String, Object>>();
+		try {
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+			SXSSFWorkbook workbook=excelExportKit.exportMultipleExcel("课程统计数据", headers, columns, dataset,null);
+			String fileName=URLEncoder.encode("课程统计数据"+sdf.format(System.currentTimeMillis()), "UTF-8");
+			HttpServletResponse response=null;
+			response.setHeader("Content-disposition", "attachment; filename="+fileName+".xlsx");
+			response.setContentType("application/msexcel;charset=utf-8");
+			os = response.getOutputStream();
+			workbook.write(os);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (os != null) {
+					os.flush();
+					os.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 }
